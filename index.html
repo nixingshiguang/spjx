@@ -102,7 +102,7 @@
         <span class="text">API：</span>
         <select id="api" name="api">
           <option value="http://www.wpsseo.cn/jiexi/?v=">VIP视频</option>
-          <option value="https://spjx.nxsg.us.kg/player.html?">Web-Player</option>
+          <option id="Web-Player" value="https://spjx.nxsg.us.kg/player.html?">Web-Player</option>
           <option value="https://www.8090g.cn/jiexi/?url=">8090g</option>
           <option value="https://jx.2s0.cn/player/?url=">2s0</option>
           <option value="https://jx.xmflv.com/?url=">xmflv</option>
@@ -122,6 +122,11 @@
   </div>
 </body>
 <script>
+  // 在文档加载完成后执行
+  $(document).ready(function () {
+    // 更改API选项中的Web-Player选项的value值
+    $("#Web-Player").val(`${window.location.origin}/player.html?`);
+  });
   /**
    * 点击播放按钮时的事件处理
    * 根据选择的API和视频地址打开新的页面进行解析
@@ -129,20 +134,12 @@
   $("#play").click(function () {
     $api = $("#api").val(); // 获取选中的API
     $url = $("#url").val(); // 获取输入的视频地址
-    // 验证视频地址是否合法
-    // if ($url == "" || $url == null || !/^http.*$/.test($url)) {
-    //   alert('视频地址不正确！');
-    //   return;
-    // }
-    // 验证视频地址是否合法
-    // if ($url == "" || $url == null || !/^http.*=$/.test($api)) {
-    //   alert('无效视频地址！');
-    //   return;
-    // }
+
     window.open($api + $url); // 打开解析页面
     window.location.reload(); // 刷新当前页面
   });
 </script>
 <!-- 发送通知 -->
 <script type="text/javascript" src="https://api.160621.xyz/static/notify/custom.js" defer></script>
+
 </html>
