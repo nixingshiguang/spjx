@@ -1,0 +1,148 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <title>视频解析</title>
+  <!-- favicon -->
+  <link rel="icon" href="favicon.ico" type="image/x-icon" />
+  <!-- 引入jQuery -->
+  <script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: flex-end;
+      background-image: url(https://api.160621.xyz/img/ai/index.php);
+      background-position: center;
+      background-attachment: fixed;
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-color: #141414;
+      min-height: 100vh;
+      min-width: 100vw;
+      font-size: x-large;
+      color: white;
+    }
+
+    .container {
+      margin-bottom: 16vh;
+      width: 80vw;
+      max-width: 500px;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      border-radius: 10px;
+      padding: 20px;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    form>div {
+      margin-bottom: 20px;
+    }
+
+    form>div:last-child {
+      margin-bottom: 0;
+    }
+
+    #video-url,
+    #api-select {
+      display: grid;
+      grid-template-columns: 1fr 5fr;
+      border-radius: 10px;
+      backdrop-filter: blur(10px);
+      padding: 10px;
+      width: 100%;
+    }
+
+    #api,
+    #url {
+      background-color: rgba(0, 0, 0, 0.5);
+      border: 0;
+      color: rgb(255, 255, 255);
+      backdrop-filter: blur(10px);
+      width: 100%;
+      height: 100%;
+      border-radius: 10px;
+      font-size: large;
+    }
+
+    input,
+    select {
+      text-align: center !important;
+    }
+
+    #play {
+      background-color: transparent;
+      backdrop-filter: blur(10px);
+      border-radius: 10px;
+      border: 0;
+      padding: 10px;
+      color: white;
+      background-color: rgba(0, 0, 0, 0.5);
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <form>
+      <div id="api-select">
+        <span class="text">API：</span>
+        <select id="api" name="api">
+          <option value="http://www.wpsseo.cn/jiexi/?v=">VIP视频</option>
+          <option value="https://spjx.nxsg.us.kg/player.html?">Web-Player</option>
+          <option value="https://www.8090g.cn/jiexi/?url=">8090g</option>
+          <option value="https://jx.2s0.cn/player/?url=">2s0</option>
+          <option value="https://jx.xmflv.com/?url=">xmflv</option>
+          <option value="https://jx.nnxv.cn/tv.php?url=">nnxv</option>
+          <option value="https://jx.jsonplayer.com/player/?url=">jsonplayer</option>
+        </select>
+
+      </div>
+      <div id="video-url">
+        <span class="text">URL：</span>
+        <input type="text" id="url">
+      </div>
+      <div id="play-btn">
+        <button id="play"> 开 始 装 13</button>
+      </div>
+    </form>
+  </div>
+</body>
+<script>
+  /**
+   * 点击播放按钮时的事件处理
+   * 根据选择的API和视频地址打开新的页面进行解析
+   */
+  $("#play").click(function () {
+    $api = $("#api").val(); // 获取选中的API
+    $url = $("#url").val(); // 获取输入的视频地址
+    // 验证视频地址是否合法
+    // if ($url == "" || $url == null || !/^http.*$/.test($url)) {
+    //   alert('视频地址不正确！');
+    //   return;
+    // }
+    // 验证视频地址是否合法
+    // if ($url == "" || $url == null || !/^http.*=$/.test($api)) {
+    //   alert('无效视频地址！');
+    //   return;
+    // }
+    window.open($api + $url); // 打开解析页面
+    window.location.reload(); // 刷新当前页面
+  });
+</script>
+<!-- 发送通知 -->
+<script type="text/javascript" src="https://api.160621.xyz/static/notify/custom.js" defer></script>
+</html>
