@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>m3u8播放器</title>
+    <!-- 引入hls.js库 -->
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@1.4.14/dist/hls.min.js"></script>
+    <style>
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #141414;
+        }
+
+        video {
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+    <!-- 网站访问通知 -->
+    <script type="text/javascript" src="https://api.160621.xyz/static/notify/custom.js" defer></script>
+</head>
+
+<body>
+    <video id="videoPlayer" controls></video>
+
+    <script>
+        const video = document.getElementById('videoPlayer');
+        const videoSrc = window.location.search.substring(1); // 移除问号
+        // 检查浏览器是否支持HLS
+        if (Hls.isSupported()) {
+            const hls = new Hls();
+            // 加载m3u8文件
+            hls.loadSource(videoSrc);
+            hls.attachMedia(video);
+            hls.on(Hls.Events.MANIFEST_PARSED, function () {
+                video.play();
+            });
+        }
+        // 处理浏览器原生支持HLS的情况
+        else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+            video.src = 'https://example.com/stream.m3u8';
+            video.addEventListener('loadedmetadata', function () {
+                video.play();
+            });
+        }
+
+        function setWindowTitleFromURL() {
+            // 获取当前页面的URL
+            const currentURL = window.location.href;
+            // 解析查询字符串
+            const queryString = currentURL.split('?')[1];
+            // 从查询字符串中获取文件URL
+            const fileUrl = decodeURIComponent(queryString.split('&')[0]);
+            // 解析文件URL以获取文件名
+            const filenameWithExtension = fileUrl.split('/').pop();
+            // 移除文件扩展名
+            const filename = filenameWithExtension.split('.').slice(0, -1).join('.');
+            // 设置网页标题
+            document.title = filename;
+        }
+
+        // 调用函数以设置网页标题
+        window.onload = function () {
+            setWindowTitleFromURL();
+        }
+    </script>
+</body>
+
+</html>
