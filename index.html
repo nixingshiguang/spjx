@@ -1,144 +1,454 @@
 ﻿<!DOCTYPE html>
-<html>
-
+<html lang="zh-CN">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>视频解析</title>
-  <!-- favicon -->
   <link rel="icon" href="favicon.ico" type="image/x-icon" />
-  <!-- 引入jQuery -->
-  <script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
+  <!-- 引入图标库 -->
+  <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  
   <style>
+    :root {
+      /* 浅色模式变量 */
+      --bg-color: #f8fafc;
+      --card-bg: #ffffff;
+      --text-primary: #1e293b;
+      --text-secondary: #64748b;
+      --border-color: #e2e8f0;
+      --accent-color: #3b82f6;
+      --accent-hover: #2563eb;
+      --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.02);
+      --transition: all 0.3s ease;
+    }
+
+    [data-theme="dark"] {
+      /* 深色模式变量 */
+      --bg-color: #0f172a;
+      --card-bg: #1e293b;
+      --text-primary: #f8fafc;
+      --text-secondary: #94a3b8;
+      --border-color: #334155;
+      --accent-color: #60a5fa;
+      --accent-hover: #3b82f6;
+      --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.2), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+    }
+
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
+      font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
     }
 
     body {
+      background-color: var(--bg-color);
+      color: var(--text-primary);
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      transition: var(--transition);
+    }
+
+    /* 主题切换按钮 */
+    .theme-toggle {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 50%;
+      width: 48px;
+      height: 48px;
       display: flex;
       justify-content: center;
-      align-items: flex-end;
-      background-image: url(https://eo-api.160621.xyz/img/random);
-      background-position: center;
-      background-attachment: fixed;
-      background-size: cover;
-      background-repeat: no-repeat;
-      background-color: #141414;
-      min-height: 100vh;
-      min-width: 100vw;
-      font-size: x-large;
+      align-items: center;
+      cursor: pointer;
+      box-shadow: var(--shadow);
+      transition: var(--transition);
+      z-index: 100;
+    }
+
+    .theme-toggle:hover {
+      transform: scale(1.1);
+      background-color: var(--accent-color);
       color: white;
     }
 
     .container {
-      margin-bottom: 16vh;
-      width: 80vw;
-      max-width: 500px;
+      width: 100%;
+      max-width: 600px;
+      padding: 20px;
+    }
+
+    .card {
+      background-color: var(--card-bg);
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: var(--shadow);
+      transition: var(--transition);
+      border: 1px solid var(--border-color);
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 20px 30px -10px rgba(0, 0, 0, 0.1);
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 30px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .header h1 {
+      font-size: 28px;
+      margin-bottom: 10px;
+      color: var(--accent-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .header h1 i {
+      margin-right: 10px;
+    }
+
+    .header p {
+      color: var(--text-secondary);
+      font-size: 16px;
+      line-height: 1.5;
     }
 
     form {
       display: flex;
       flex-direction: column;
+      gap: 20px;
+    }
+
+    .form-group {
+      display: flex;
       align-items: center;
-      border-radius: 10px;
-      padding: 20px;
-      max-width: 800px;
-      margin: 0 auto;
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      overflow: hidden;
+      transition: var(--transition);
+      background-color: var(--card-bg);
     }
 
-    form>div {
-      margin-bottom: 20px;
+    .form-group:focus-within {
+      border-color: var(--accent-color);
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
     }
 
-    form>div:last-child {
-      margin-bottom: 0;
+    .form-label {
+      min-width: 90px;
+      width: 90px;
+      padding: 0 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: rgba(59, 130, 246, 0.05);
+      border-right: 1px solid var(--border-color);
+      color: var(--accent-color);
+      font-weight: 500;
+      text-align: center;
+      white-space: nowrap;
     }
 
-    #video-url,
-    #api-select {
-      display: grid;
-      grid-template-columns: 1fr 5fr;
-      border-radius: 10px;
-      backdrop-filter: blur(10px);
-      padding: 10px;
-      width: 100%;
+    .form-label i {
+      margin-right: 8px;
     }
 
-    #api,
-    #url {
-      background-color: rgba(0, 0, 0, 0.5);
-      border: 0;
-      color: rgb(255, 255, 255);
-      backdrop-filter: blur(10px);
-      width: 100%;
-      height: 100%;
-      border-radius: 10px;
-      font-size: large;
-    }
-
-    input,
-    select {
-      text-align: center !important;
-    }
-
-    #play {
+    .form-control {
+      flex: 1;
+      padding: 16px 20px;
+      border: none;
+      outline: none;
       background-color: transparent;
-      backdrop-filter: blur(10px);
-      border-radius: 10px;
-      border: 0;
-      padding: 10px;
+      color: var(--text-primary);
+      font-size: 16px;
+      transition: var(--transition);
+    }
+
+    .form-control::placeholder {
+      color: var(--text-secondary);
+      opacity: 0.7;
+    }
+
+    select.form-control {
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 20px center;
+      padding-right: 40px;
+    }
+
+    [data-theme="dark"] select.form-control {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    }
+
+    /* 下拉选项样式 */
+    select.form-control option {
+      background-color: #ffffff;
+      color: #1e293b;
+      padding: 8px 12px;
+    }
+
+    [data-theme="dark"] select.form-control option {
+      background-color: #374151;
+      color: #f9fafb;
+      padding: 8px 12px;
+    }
+
+    /* 选中项高亮 */
+    select.form-control option:hover,
+    select.form-control option:checked {
+      background-color: var(--accent-color);
       color: white;
-      background-color: rgba(0, 0, 0, 0.5);
+    }
+
+    .btn {
+      padding: 16px 20px;
+      border: none;
+      border-radius: 12px;
+      background-color: var(--accent-color);
+      color: white;
+      font-size: 18px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .btn:hover {
+      background-color: var(--accent-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px -5px rgba(59, 130, 246, 0.3);
+    }
+
+    .btn:active {
+      transform: translateY(0);
+    }
+
+    .btn i {
+      font-size: 20px;
+    }
+
+    .footer {
+      text-align: center;
+      margin-top: 25px;
+      color: var(--text-secondary);
+      font-size: 14px;
+    }
+
+    .tips {
+      margin-top: 15px;
+      padding: 12px;
+      background-color: rgba(59, 130, 246, 0.05);
+      border-radius: 8px;
+      font-size: 14px;
+      color: var(--text-secondary);
+      border-left: 3px solid var(--accent-color);
+    }
+
+    /* 加载动画 */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .card, .header, form, .footer {
+      animation: fadeIn 0.5s ease forwards;
+    }
+
+    .card { animation-delay: 0.1s; opacity: 0; }
+    .header { animation-delay: 0.2s; opacity: 0; }
+    form { animation-delay: 0.3s; opacity: 0; }
+    .footer { animation-delay: 0.4s; opacity: 0; }
+
+    /* 响应式调整 */
+    @media (max-width: 480px) {
+      .card {
+        padding: 20px;
+      }
+
+      .header h1 {
+        font-size: 24px;
+      }
+
+      .form-label {
+        min-width: 75px;
+        width: 75px;
+        padding: 0 10px;
+        font-size: 14px;
+        text-align: center;
+        justify-content: center;
+      }
+
+      .form-control {
+        padding: 14px 16px;
+        font-size: 15px;
+      }
+
+      .btn {
+        padding: 14px 16px;
+        font-size: 16px;
+      }
     }
   </style>
 </head>
 
 <body>
+  <!-- 主题切换按钮 -->
+  <button class="theme-toggle" id="themeToggle" aria-label="切换主题">
+    <i class="fa fa-moon-o" aria-hidden="true"></i>
+  </button>
+
   <div class="container">
-    <form>
-      <div id="api-select">
-        <span class="text">API：</span>
-        <select id="api" name="api">
-          <option value="http://www.wpsseo.cn/jiexi/?v=">VIP视频</option>
-          <option id="Web-Player" value="player.html?">Web-Player</option>
-          <option value="m3u8.html?">m3u8</option>
-          <option value="https://www.8090g.cn/jiexi/?url=">8090g</option>
-          <option value="https://jx.2s0.cn/player/?url=">2s0</option>
-          <option value="https://jx.xmflv.com/?url=">xmflv</option>
-          <option value="https://jx.nnxv.cn/tv.php?url=">nnxv</option>
-          <option value="https://jx.jsonplayer.com/player/?url=">jsonplayer</option>
-        </select>
+    <div class="card">
+      <div class="header">
+        <h1><i class="fa fa-play-circle" aria-hidden="true"></i>视频解析</h1>
+        <p>选择解析接口，输入视频地址，一键解析播放</p>
+      </div>
 
-      </div>
-      <div id="video-url">
-        <span class="text">URL：</span>
-        <input type="text" id="url">
-      </div>
-      <div id="play-btn">
-        <button id="play"> 开 始 装 13</button>
-      </div>
-    </form>
+      <form id="parseForm">
+        <div class="form-group">
+          <label class="form-label">
+            <i class="fa fa-plug" aria-hidden="true"></i>接口
+          </label>
+          <select id="api" name="api" class="form-control">
+            <option value="http://www.wpsseo.cn/jiexi/?v=">VIP视频</option>
+            <option id="Web-Player" value="player.html?">普通在线视频</option>
+            <option value="m3u8.html?">m3u8视频</option>
+            <option value="https://www.8090g.cn/jiexi/?url=">8090g</option>
+            <option value="https://jx.2s0.cn/player/?url=">2s0</option>
+            <option value="https://jx.xmflv.com/?url=">xmflv</option>
+            <option value="https://jx.nnxv.cn/tv.php?url=">nnxv</option>
+            <option value="https://jx.jsonplayer.com/player/?url=">jsonplayer</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">
+            <i class="fa fa-link" aria-hidden="true"></i>地址
+          </label>
+          <input 
+            type="text" 
+            id="url" 
+            class="form-control" 
+            placeholder="请输入视频播放地址"
+            required
+          >
+        </div>
+
+        <button type="submit" id="play" class="btn">
+          <i class="fa fa-play" aria-hidden="true"></i>
+          开始播放
+        </button>
+
+        <div class="tips">
+          <i class="fa fa-lightbulb-o" aria-hidden="true"></i>
+          提示：若解析失败，请尝试更换其他接口
+        </div>
+      </form>
+    </div>
+
+    <div class="footer">
+      <p>© 2025 视频解析工具</p>
+    </div>
   </div>
+
+  <script>
+    // 主题切换功能
+    const themeToggle = document.getElementById('themeToggle');
+    const themeIcon = themeToggle.querySelector('i');
+    
+    // 检查系统主题偏好
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const currentTheme = prefersDark ? 'dark' : 'light';
+    
+    // 应用当前主题
+    document.documentElement.setAttribute('data-theme', currentTheme);
+    updateThemeIcon(currentTheme);
+
+    // 切换主题
+    themeToggle.addEventListener('click', () => {
+      const newTheme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', newTheme);
+      localStorage.setItem('theme', newTheme);
+      updateThemeIcon(newTheme);
+    });
+
+    // 更新主题图标
+    function updateThemeIcon(theme) {
+      if (theme === 'dark') {
+        themeIcon.className = 'fa fa-sun-o';
+        themeToggle.setAttribute('aria-label', '切换到浅色模式');
+      } else {
+        themeIcon.className = 'fa fa-moon-o';
+        themeToggle.setAttribute('aria-label', '切换到深色模式');
+      }
+    }
+
+    // 监听系统主题变化
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+      if (!localStorage.getItem('theme')) {
+        const newTheme = e.matches ? 'dark' : 'light';
+        document.documentElement.setAttribute('data-theme', newTheme);
+        updateThemeIcon(newTheme);
+      }
+    });
+
+    // 初始化Web-Player地址
+    document.addEventListener('DOMContentLoaded', function () {
+      document.getElementById('Web-Player').value = `${window.location.origin}/player.html?`;
+    });
+
+    // 表单提交处理
+    document.getElementById('parseForm').addEventListener('submit', function (e) {
+      e.preventDefault(); // 阻止表单默认提交行为
+      
+      const api = document.getElementById('api').value;
+      const url = document.getElementById('url').value.trim();
+      
+      if (!url) {
+        alert('请输入有效的视频地址');
+        return;
+      }
+      
+      // 添加加载状态
+      const playBtn = document.getElementById('play');
+      const originalText = playBtn.innerHTML;
+      playBtn.disabled = true;
+      playBtn.innerHTML = '<i class="fa fa-spinner fa-spin" aria-hidden="true"></i> 加载中...';
+      
+      // 延迟执行，给用户加载反馈
+      setTimeout(() => {
+        window.open(api + url, '_blank');
+        
+        // 恢复按钮状态
+        playBtn.disabled = false;
+        playBtn.innerHTML = originalText;
+        
+        // 可选：清空输入框
+        document.getElementById('url').value = '';
+      }, 500);
+    });
+
+    // 输入框回车提交
+    document.getElementById('url').addEventListener('keypress', function (e) {
+      if (e.key === 'Enter') {
+        document.getElementById('play').click();
+      }
+    });
+  </script>
 </body>
-<script>
-  // 在文档加载完成后执行
-  $(document).ready(function () {
-    // 更改API选项中的Web-Player选项的value值
-    $("#Web-Player").val(`${window.location.origin}/player.html?`);
-  });
-  /**
-   * 点击播放按钮时的事件处理
-   * 根据选择的API和视频地址打开新的页面进行解析
-   */
-  $("#play").click(function () {
-    $api = $("#api").val(); // 获取选中的API
-    $url = $("#url").val(); // 获取输入的视频地址
-
-    window.open($api + $url); // 打开解析页面
-    window.location.reload(); // 刷新当前页面
-  });
-</script>
-
 </html>
